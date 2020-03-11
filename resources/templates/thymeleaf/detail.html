@@ -1,0 +1,56 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>とらのあな キャンペーン検索</title>
+    <style>
+        main{
+            width:80%;
+            margin: 0 auto;
+        }
+        img{
+            width:auto;
+            height:auto;
+            max-height: 30vh;
+        }
+    </style>
+</head>
+<body>
+<header>
+
+</header>
+<main>
+    <div class="navigation-area">
+        <input id="from" type="date" placeholder="20190915"> ～ <input id="to" type="date" placeholder="20190915">に応募可能なキャンペーン
+        <button onclick="location.href='/period?from=' + document.getElementById('from').value.replace(/-/g,'') + '&to=' + document.getElementById('to').value.replace(/-/g,'') ">
+            検索
+        </button>
+        <a class="back-link" href="#" onclick="history.back();">戻る</a>
+    </div>
+    <div class="error-message-area" th:if="${result.isEmpty()}">
+        該当するデータが存在しません。
+    </div>
+    <div class="result-area" th:unless="${result.isEmpty()}">
+        <th:block th:object="${result.get(0)}">
+            <h1 th:text="*{title} + (*{isAdult} ? '【成人向け】':'')"></h1>
+            <div class="result-detail-area">
+                <dl>
+                    <dt></dt>
+                    <dd><a th:href="*{campaignUrl}" target="_blank"><img th:src="*{imageUrl}" th:attr="alt=*{title}"></a></dd>
+                    <dt>応募期間</dt>
+                    <dd th:text="*{startAt} + ' ～ ' + *{endAt}"></dd>
+                    <dt>詳細</dt>
+                    <dd id="description" th:utext="*{description}"></dd>
+                </dl>
+            </div>
+        </th:block>
+    </div>
+</main>
+<footer>
+
+</footer>
+<script type="text/javascript">
+    document.getElementById('description').innerHTML = document.getElementById('description').innerHTML.replace(/\r?\n/g,'<br>');
+</script>
+</body>
+</html>

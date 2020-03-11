@@ -1,0 +1,86 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>とらのあな キャンペーン検索</title>
+    <style>
+        main{
+            width:80%;
+            margin: 0 auto;
+        }
+        img{
+            width:auto;
+            height:auto;
+            max-height: 15vh;
+        }
+        table{
+            border-collapse: collapse;
+        }
+        td{
+            border: solid 1px;
+        }
+        td a {
+            margin: 5px auto;
+            display: block;
+            text-align: center;
+        }
+        th{
+            border: solid 1px;
+        }
+        tr:nth-child(odd) td {
+	        background: #f5f5f5;
+        }
+        tr.adult-row td{
+            background: rgba(255,219,225,0.5);
+        }
+        th{
+            background: #ffa578;
+        }
+    </style>
+</head>
+<body>
+<header>
+
+</header>
+<main>
+    <div class="navigation-area">
+        <input id="from" type="date" placeholder="20190915"> ～ <input id="to" type="date" placeholder="20190915">に応募可能なキャンペーン
+        <button onclick="location.href='/period?from=' + document.getElementById('from').value.replace(/-/g,'') + '&to=' + document.getElementById('to').value.replace(/-/g,'') ">
+            検索
+        </button>
+    </div>
+    <div class="error-message-area" th:if="${result.isEmpty()}">
+        該当するデータが存在しません。
+    </div>
+    <div class="result-area" th:unless="${result.isEmpty()}">
+        <h1>応募可能なキャンペーン一覧</h1>
+        <div class="result-list-area">
+            <table>
+                <thead>
+                <tr>
+                    <th>成人向け</th>
+                    <th>画像</th>
+                    <th>タイトル</th>
+                    <th>応募開始日</th>
+                    <th>応募終了日</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="bean : ${result}" th:classappend="${bean.isAdult} ? 'adult-row':''">
+                    <td th:text="${bean.isAdult} ? '○':''"></td>
+                    <td><a th:href="${bean.campaignUrl}" target="_blank"><img th:src="${bean.imageUrl}" th:attr="alt=${bean.title}"></a>
+                    </td>
+                    <td><a th:href="'/detail/' + ${bean.id}" th:text="${bean.title}"></a></td>
+                    <td th:text="${bean.startAt}"></td>
+                    <td th:text="${bean.endAt}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<footer>
+
+</footer>
+</body>
+</html>
